@@ -12,6 +12,6 @@ When you defeat 20 enemies, a boss will appear. The battle will be more dificult
 ## Future improvements
 I want to create an upgrade system, consisting of a choice of improvements that will make you stronger.
 I want also to add bonus levels which will replace battle, in order to buy new spells, to increase the stats of your spells.
-Finnaly, turn the project into a roguelike game.
+Finally, turn the project into a roguelike game.
 
  

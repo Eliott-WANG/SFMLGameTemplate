@@ -10,7 +10,7 @@ using namespace std;
 Creation de 4 sorts aleatoires
 Cliquer : executer le sort et le supprimer de la barre de sort
 Lorsque le joueur passe ou qu'il n'y a plus de sort dans la barre, les sorts restants sont supprimes et 4 nouveaux sorts sont piochés
-
+.
 
 */
 

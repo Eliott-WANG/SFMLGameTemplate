@@ -37,21 +37,22 @@ int main()
 {
     int position = 0;
     int currentPlace = 1;
-    bool title = true;
+    bool titlepage = true;
     bool game = false;
-    int PA = 8;
+    int mana = 8;
     int vie = 100;
-    int enemyPv = 10;
+    int enemyHp = 10;
     int resistance = 0;
-    int enemyCompteur = 0;
+    int enemyCount = 0;
     srand(time(NULL));
     int nb_alea = std::rand() % 3;
     int enemyIdentity = nb_alea;
-    const int NB_SORTS_BARRE = 4;
-    const int NB_SORTS = 6;
+    const int NB_SPELLS_BAR = 4;
+    const int NB_SPELLS = 6;
     const int NB_ENEMIES = 10;
-    Sort barreDeSorts[NB_SORTS_BARRE];
+    Sort spellBar[NB_SPELLS_BAR];
     bool cliking = true;
+    bool endTurn = false;
     int dmg[6];
     dmg[0] = 12;
     dmg[1] = 20;
@@ -59,11 +60,11 @@ int main()
     dmg[3] = 36;
     dmg[4] = 20;
     dmg[5] = 0;
-    char textPA = PA;
+    char textMana = mana;
     int coins = 0;
-    Sort listSort[NB_SORTS];
+    Sort listSpell[NB_SPELLS];
     Enemies currentEnemy[NB_ENEMIES];
-    int sortsEnBarre = 4;
+    int spellsInBar = 4;
     
 
 
@@ -144,7 +145,12 @@ int main()
     sf::Sprite passer(passer_tex);
     passer.setScale(sf::Vector2f(2, 2));
     passer.setPosition(sf::Vector2f(650, 500));
-    if (!enemy_tex.loadFromFile("Res/Walvak/100521.png"))
+    if (!passer_tex.loadFromFile("Res/Walvak/passer.png"))
+        return EXIT_FAILURE;
+    
+    sf::Sprite gameOver(titleOver_tex);
+    gameOver.setPosition(sf::Vector2f(0, 0));
+    if (!titleOver_tex.loadFromFile("Res/Walvak/100218.png"))
         return EXIT_FAILURE;
 
     sf::IntRect frameSprite;
@@ -156,35 +162,35 @@ int main()
     enemy.setTextureRect(frameSprite);
     
 
-    listSort[0].costMana = 1;
-    listSort[0].dmg = 1;
-    listSort[0].img = sf::Sprite(A_tex);
-    listSort[0].name = "A";
+    listSpell[0].costMana = 1;
+    listSpell[0].dmg = 1;
+    listSpell[0].img = sf::Sprite(A_tex);
+    listSpell[0].name = "A";
     
-    listSort[1].costMana = 2;
-    listSort[1].dmg = 2;
-    listSort[1].img = sf::Sprite(B_tex);
-    listSort[1].name = "B";
+    listSpell[1].costMana = 2;
+    listSpell[1].dmg = 2;
+    listSpell[1].img = sf::Sprite(B_tex);
+    listSpell[1].name = "B";
 
-    listSort[2].costMana = 3;
-    listSort[2].dmg = 4;
-    listSort[2].img = sf::Sprite(C_tex);
-    listSort[2].name = "C";
+    listSpell[2].costMana = 3;
+    listSpell[2].dmg = 4;
+    listSpell[2].img = sf::Sprite(C_tex);
+    listSpell[2].name = "C";
 
-    listSort[3].costMana = 3;
-    listSort[3].dmg = 1;
-    listSort[3].img = sf::Sprite(D_tex);
-    listSort[3].name = "D";
+    listSpell[3].costMana = 3;
+    listSpell[3].dmg = 1;
+    listSpell[3].img = sf::Sprite(D_tex);
+    listSpell[3].name = "D";
 
-    listSort[4].costMana = 4;
-    listSort[4].dmg = 5;
-    listSort[4].img = sf::Sprite(E_tex);
-    listSort[4].name = "E";
+    listSpell[4].costMana = 4;
+    listSpell[4].dmg = 5;
+    listSpell[4].img = sf::Sprite(E_tex);
+    listSpell[4].name = "E";
 
-    listSort[5].costMana = 5;
-    listSort[5].dmg = 3;
-    listSort[5].img = sf::Sprite(F_tex);
-    listSort[5].name = "F";
+    listSpell[5].costMana = 5;
+    listSpell[5].dmg = 3;
+    listSpell[5].img = sf::Sprite(F_tex);
+    listSpell[5].name = "F";
 
     currentEnemy[0].hp = 10;
     currentEnemy[0].resistance = 0;
@@ -209,7 +215,7 @@ int main()
     sf::Font font;
     if (!font.loadFromFile("Res/Snacko Trial.otf"))
         return EXIT_FAILURE;
-    sf::Text text(textPA, font, 100);
+    sf::Text text(textMana, font, 100);
     text.setPosition(sf::Vector2f(0, 0));
 
 
@@ -223,7 +229,7 @@ int main()
     sf::Clock clock;
 
     // Start the game loop
-    RemplirBarre(NB_SORTS_BARRE, nb_alea, NB_SORTS, barreDeSorts, listSort, window);
+    RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
     while (window.isOpen())
     {
         
@@ -238,7 +244,7 @@ int main()
                 {
                     if (userevent.type == sf::Event::MouseButtonPressed)
                     {
-                        title = false;
+                        titlepage = false;
                         game = true;
                     }
                 }
@@ -246,7 +252,10 @@ int main()
                 {
                     cliking = true;
                 }
-                    
+                if (userevent.type == sf::Event::KeyPressed  && game == true)
+                {
+                    endTurn = true;
+                }
                 
 
                 // Close window: exit
@@ -282,7 +291,7 @@ int main()
 
 
                 // Draw the sprite
-                if (title)
+                if (titlepage)
                 {
                     window.draw(titlePage);
                     window.draw(jouer);
@@ -290,7 +299,7 @@ int main()
                 if (game)
                 {
                     
-                    if (PA > 0)
+                    if (mana > 0)
                     {
                         
                         if (enemyIdentity == 0)
@@ -332,19 +341,23 @@ int main()
                             if (mousePosition.y < window.getSize().y - (150 - 128) && mousePosition.y > window.getSize().y - 150)
                             {
                                
-                                for (int sortIndex = 0; sortIndex < NB_SORTS_BARRE; ++sortIndex)
+                                for (int sortIndex = 0; sortIndex < NB_SPELLS_BAR; ++sortIndex)
                                 {                                
-                                    if (mousePosition.x > barreDeSorts[sortIndex].img.getPosition().x && mousePosition.x < barreDeSorts[sortIndex].img.getPosition().x + 128)
+                                    if (mousePosition.x > spellBar[sortIndex].img.getPosition().x && mousePosition.x < spellBar[sortIndex].img.getPosition().x + 128)
                                     {
-                                        if (!barreDeSorts[sortIndex].isVisible) continue;                                       
-                                        enemyPv = enemyPv - (barreDeSorts[sortIndex].dmg - currentEnemy[enemyIdentity].resistance);
+                                        if (spellBar[sortIndex].costMana <= mana)
+                                        {
+                                            if (!spellBar[sortIndex].isVisible) continue;
+                                            enemyHp = enemyHp - (spellBar[sortIndex].dmg - currentEnemy[enemyIdentity].resistance);
+
+                                            std::cout << vie << "ult" << std::endl;
+                                            mana = mana - spellBar[sortIndex].costMana;
+                                            std::cout << mana << std::endl;
+                                            std::cout << enemyHp << "hp" << std::endl;
+                                            spellBar[sortIndex].isVisible = false;
+                                            spellsInBar -= 1;
+                                        }
                                         
-                                        std::cout << vie << "ult" << std::endl;
-                                        PA = PA - barreDeSorts[sortIndex].costMana;
-                                        std::cout << PA << std::endl;
-                                        std::cout << enemyPv << "hp" << std::endl;
-                                        barreDeSorts[sortIndex].isVisible = false;
-                                        sortsEnBarre -= 1;
                                     }
 
                                 }
@@ -353,65 +366,76 @@ int main()
                             {
                                 vie = vie - currentEnemy[enemyIdentity].dmg;
                                 srand(time(NULL));
-                                PA = std::rand() % 15;
-                                RemplirBarre(NB_SORTS_BARRE, nb_alea, NB_SORTS, barreDeSorts, listSort, window);
-                                sortsEnBarre = 4;
+                                mana = std::rand() % 15;
+                                RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
+                                spellsInBar = 4;
                             }
                         }
-                        if (enemyPv < 1)
+                        if (endTurn)
+                        {
+                            vie = vie - currentEnemy[enemyIdentity].dmg;
+                            srand(time(NULL));
+                            mana = std::rand() % 15;
+                            RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
+                            spellsInBar = 4;
+                            endTurn = false;
+                        }
+                        if (enemyHp < 1)
                         {
                             currentPlace = currentPlace + 1;
                             
-                            if (enemyCompteur < 19)
+                            if (enemyCount < 19)
                             {
                                 srand(time(NULL));
                                 nb_alea = std::rand() % 3;
                                 enemyIdentity = nb_alea;
-                                enemyPv = currentEnemy[enemyIdentity].hp;
-                                enemyCompteur = enemyCompteur + 1;
-                                std::cout << enemyCompteur << "oi" << std::endl;
+                                enemyHp = currentEnemy[enemyIdentity].hp;
+                                enemyCount = enemyCount + 1;
+                                std::cout << enemyCount << "oi" << std::endl;
                                 srand(time(NULL));
-                                PA = PA + std::rand() % 5;
+                                mana = mana + std::rand() % 5;
                             }
                             else
                             {
                                 enemyIdentity = 10;
-                                enemyPv = currentEnemy[enemyIdentity].hp;
+                                enemyHp = currentEnemy[enemyIdentity].hp;
                             }
 
                         }
                         window.draw(sl1);
-                        window.draw(enemy);
+                        window.draw(enemy);                     
                         window.draw(passer);
-                        for (int sortIndex = 0; sortIndex < NB_SORTS_BARRE; ++sortIndex)
+                        for (int sortIndex = 0; sortIndex < NB_SPELLS_BAR; ++sortIndex)
                         {
-                            if (!barreDeSorts[sortIndex].isVisible) continue;
-                            window.draw(barreDeSorts[sortIndex].img);
+                            if (!spellBar[sortIndex].isVisible) continue;
+                            window.draw(spellBar[sortIndex].img);
 
                         }
                         cliking = false;
                         
                     }
-                    if (PA < 1)
+                    if (mana < 1)
                     {
                         vie = vie - currentEnemy[enemyIdentity].dmg;
                         srand(time(NULL));
-                        PA = std::rand() % 15;
-                        RemplirBarre(NB_SORTS_BARRE, nb_alea, NB_SORTS, barreDeSorts, listSort, window);
-                        sortsEnBarre = 4;
+                        mana = std::rand() % 15;
+                        RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
+                        spellsInBar = 4;
                     }
-                    if (sortsEnBarre == 0)
+                    if (spellsInBar == 0)
                     {
                         srand(time(NULL));
-                        RemplirBarre(NB_SORTS_BARRE, nb_alea, NB_SORTS, barreDeSorts, listSort, window);
-                        sortsEnBarre = 4;
+                        RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
+                        spellsInBar = 4;
                     }
                     if (vie < 1)
                     {
-                        vie = 100;
-                        game = true;
-                        coins = coins + enemyCompteur * 10;
-                        enemyCompteur = 0;
+                       //for the roguelike future improvement
+                       //vie = 100;                      
+                       // coins = coins + enemyCount * 10;
+                       // enemyCount = 0;
+                       window.draw(gameOver);
+                       //return EXIT_SUCCESS;
                         
                     }
                     

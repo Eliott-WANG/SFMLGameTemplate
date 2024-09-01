@@ -14,6 +14,7 @@ Lorsque le joueur passe ou qu'il n'y a plus de sort dans la barre, les sorts res
 
 */
 
+//the proprieties of all the spells
 struct Sort
 {
     int dmg;
@@ -23,6 +24,7 @@ struct Sort
     bool isVisible = true;
 };
 
+//the proprieties of all the enemies
 struct Enemies
 {
     int hp;
@@ -31,8 +33,11 @@ struct Enemies
     
 
 };
+//place the spells in your spellbar
 void RemplirBarre(const int NB_SORTS_BARRE, int& nb_alea, const int NB_SORTS, Sort  barreDeSorts[4], Sort  listSort[6], sf::RenderWindow& window);
 const int DECALAGE_SORT_X = 150;
+
+
 int main()
 {
     int position = 0;
@@ -72,7 +77,7 @@ int main()
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(816, 624), "SFML window");
 
-    // Load a sprite to display
+    // Load sprites to display
     sf::Texture titlePage_tex;
     if (!titlePage_tex.loadFromFile("Res/Walvak/100213.png"))
         return EXIT_FAILURE;
@@ -161,7 +166,7 @@ int main()
     enemy.setTexture(enemy_tex);
     enemy.setTextureRect(frameSprite);
     
-
+    // insert the content in all the proprieties of the spells
     listSpell[0].costMana = 1;
     listSpell[0].dmg = 1;
     listSpell[0].img = sf::Sprite(A_tex);
@@ -192,6 +197,7 @@ int main()
     listSpell[5].img = sf::Sprite(F_tex);
     listSpell[5].name = "F";
 
+    // insert the content in all the proprieties of the foes
     currentEnemy[0].hp = 10;
     currentEnemy[0].resistance = 0;
     currentEnemy[0].dmg = 4;
@@ -203,29 +209,11 @@ int main()
     currentEnemy[2].hp = 15;
     currentEnemy[2].resistance = 0;
     currentEnemy[2].dmg = 2;
-    
+    //don't work yet, for a future improvement
     currentEnemy[10].hp = 120;
     currentEnemy[10].resistance = 1;
     currentEnemy[10].dmg = 6;
 
-    //mickey.setTextureRect(frameSprite);
-
-
-    // Create a graphical text to display
-    sf::Font font;
-    if (!font.loadFromFile("Res/Snacko Trial.otf"))
-        return EXIT_FAILURE;
-    sf::Text text(textMana, font, 100);
-    text.setPosition(sf::Vector2f(0, 0));
-
-
-    // Load a music to play
-    //sf::Music music;
-    //if (!music.openFromFile("Res/2-19. Calamari Inkantation.mp3"))
-    //    return EXIT_FAILURE;
-
-    // Play the music
-    //music.play();
     sf::Clock clock;
 
     // Start the game loop
@@ -252,12 +240,12 @@ int main()
                 {
                     cliking = true;
                 }
+                //to pass the turn
                 if (userevent.type == sf::Event::KeyPressed  && game == true)
                 {
                     endTurn = true;
                 }
                 
-
                 // Close window: exit
                 if (userevent.type == sf::Event::Closed)
                     window.close();
@@ -265,23 +253,6 @@ int main()
 
 
             }
-            if (clock.getElapsedTime().asSeconds() >= 0.1f)
-            {
-
-
-
-            }
-            
-            
-            
-            
-            
-            
-            //text.move(sf::Vector2f(0.0, -0.1));
-                sf::Vector2f textposition = text.getPosition();
-                //cout << textposition.x << "  " << textposition.y << endl;
-                //sf::Vector2i mouseposition = sf::Mouse::getPosition(window);
-                /*cout << mouseposition.x << "  " << mouseposition.y << endl;*/
                 
                 if (clock.getElapsedTime().asSeconds() > 3)
                 {
@@ -301,7 +272,7 @@ int main()
                     
                     if (mana > 0)
                     {
-                        
+                        //set the proprieties and show the current enemy
                         if (enemyIdentity == 0)
                         {
                             frameSprite.left = 511.f;
@@ -336,6 +307,7 @@ int main()
                             enemy.setPosition(sf::Vector2f(140, 70));
                             enemy.setTextureRect(frameSprite);
                         }
+                        //when using a spell
                         if (cliking)
                         {
                             if (mousePosition.y < window.getSize().y - (150 - 128) && mousePosition.y > window.getSize().y - 150)
@@ -371,6 +343,7 @@ int main()
                                 spellsInBar = 4;
                             }
                         }
+                        //set the next turn
                         if (endTurn)
                         {
                             vie = vie - currentEnemy[enemyIdentity].dmg;
@@ -414,6 +387,7 @@ int main()
                         cliking = false;
                         
                     }
+                    //when out of mana
                     if (mana < 1)
                     {
                         vie = vie - currentEnemy[enemyIdentity].dmg;
@@ -422,6 +396,7 @@ int main()
                         RemplirBarre(NB_SPELLS_BAR, nb_alea, NB_SPELLS, spellBar, listSpell, window);
                         spellsInBar = 4;
                     }
+                    //when there is no spell in the bar
                     if (spellsInBar == 0)
                     {
                         srand(time(NULL));
@@ -462,6 +437,7 @@ int main()
     return EXIT_SUCCESS;
 }
 
+//this is the function that place the spells in your spellbar
 void RemplirBarre(const int NB_SORTS_BARRE, int& nb_alea, const int NB_SORTS, Sort  barreDeSorts[4], Sort  listSort[6], sf::RenderWindow& window)
 {
     for (int sortIndex = 0; sortIndex < NB_SORTS_BARRE; ++sortIndex)

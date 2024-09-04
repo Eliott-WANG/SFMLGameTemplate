@@ -1,0 +1,5 @@
+C:\01_MTI3D\POO\repo\sfmlTesting\SFMLGameTemplate\x64\Release\SFMLGameTemplate.exe
+D:\CoursM1\Programmation\SFMLGameTemplate\x64\Release\SFMLGameTemplate.exe
+C:\Users\etudiant\OneDrive\Documents\M1\S1\projet\SFMLGameTemplate\x64\Release\SFMLGameTemplate.exe
+Z:\M1\2023-2024\Cours SFML\ExempleOrienteObjet\x64\Release\SFMLGameTemplate.exe
+\\synomaster\partage\M1\2023-2024\Cours SFML\Ressources\ExempleOrienteObjet\x64\Release\SFMLGameTemplate.exe

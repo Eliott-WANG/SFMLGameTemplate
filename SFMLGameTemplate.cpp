@@ -1,5 +1,6 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <ctime>
 #include <cstdlib>
 #include <math.h>
@@ -19,6 +20,7 @@ struct Sort
 {
     int dmg;
     int costMana;
+    int heal;
     sf::Sprite img;
     string name;
     bool isVisible = true;
@@ -45,16 +47,16 @@ int main()
     bool titlepage = true;
     bool game = false;
     int mana = 8;
-    int vie = 100;
+    int vie = 30;
     int enemyHp = 10;
     int resistance = 0;
     int enemyCount = 0;
     srand(time(NULL));
-    int nb_alea = std::rand() % 3;
+    int nb_alea = std::rand() % 9;
     int enemyIdentity = nb_alea;
     const int NB_SPELLS_BAR = 4;
     const int NB_SPELLS = 6;
-    const int NB_ENEMIES = 10;
+    const int NB_ENEMIES = 11;
     Sort spellBar[NB_SPELLS_BAR];
     bool cliking = true;
     bool endTurn = false;
@@ -70,6 +72,7 @@ int main()
     Sort listSpell[NB_SPELLS];
     Enemies currentEnemy[NB_ENEMIES];
     int spellsInBar = 4;
+    char manaChar = mana;
     
 
 
@@ -160,6 +163,12 @@ int main()
 
     sf::IntRect frameSprite;
     
+    sf::Text manaText;
+    manaText.setString(to_string(mana));
+    manaText.setCharacterSize(30);
+    manaText.setPosition(100, 100);
+    
+    
 
     titlePage.setTexture(titlePage_tex);
     sl1.setTexture(sl1_tex);
@@ -167,33 +176,39 @@ int main()
     enemy.setTextureRect(frameSprite);
     
     // insert the content in all the proprieties of the spells
-    listSpell[0].costMana = 1;
-    listSpell[0].dmg = 1;
+    listSpell[0].costMana = 4;
+    listSpell[0].dmg = 0;
+    listSpell[0].heal = 5;
     listSpell[0].img = sf::Sprite(A_tex);
     listSpell[0].name = "A";
     
     listSpell[1].costMana = 2;
     listSpell[1].dmg = 2;
+    listSpell[1].heal = 0;
     listSpell[1].img = sf::Sprite(B_tex);
     listSpell[1].name = "B";
 
     listSpell[2].costMana = 3;
     listSpell[2].dmg = 4;
+    listSpell[2].heal = 0;
     listSpell[2].img = sf::Sprite(C_tex);
     listSpell[2].name = "C";
 
     listSpell[3].costMana = 3;
     listSpell[3].dmg = 1;
+    listSpell[3].heal = 0;
     listSpell[3].img = sf::Sprite(D_tex);
     listSpell[3].name = "D";
 
-    listSpell[4].costMana = 4;
+    listSpell[4].costMana = 5;
     listSpell[4].dmg = 5;
+    listSpell[4].heal = 1;
     listSpell[4].img = sf::Sprite(E_tex);
     listSpell[4].name = "E";
 
-    listSpell[5].costMana = 5;
+    listSpell[5].costMana = 6;
     listSpell[5].dmg = 3;
+    listSpell[5].heal = 2;
     listSpell[5].img = sf::Sprite(F_tex);
     listSpell[5].name = "F";
 
@@ -209,6 +224,35 @@ int main()
     currentEnemy[2].hp = 15;
     currentEnemy[2].resistance = 0;
     currentEnemy[2].dmg = 2;
+
+    currentEnemy[3].hp = 3;
+    currentEnemy[3].resistance = 0;
+    currentEnemy[3].dmg = 6;
+
+    currentEnemy[4].hp = 9;
+    currentEnemy[4].resistance = 0;
+    currentEnemy[4].dmg = 3;
+
+    currentEnemy[5].hp = 22;
+    currentEnemy[5].resistance = 0;
+    currentEnemy[5].dmg = 1;
+    
+    currentEnemy[6].hp = 16;
+    currentEnemy[6].resistance = 0;
+    currentEnemy[6].dmg = 5;
+
+    currentEnemy[7].hp = 1;
+    currentEnemy[7].resistance = 0;
+    currentEnemy[7].dmg = 25;
+
+    currentEnemy[8].hp = 5;
+    currentEnemy[8].resistance = 0;
+    currentEnemy[8].dmg = 2;
+
+    currentEnemy[9].hp = 6;
+    currentEnemy[9].resistance = 0;
+    currentEnemy[9].dmg = 5;
+    
     //don't work yet, for a future improvement
     currentEnemy[10].hp = 120;
     currentEnemy[10].resistance = 1;
@@ -298,6 +342,62 @@ int main()
                             frameSprite.height = 235.f;
                             enemy.setTextureRect(frameSprite);                                     
                         }
+                        if (enemyIdentity == 3)
+                        {
+                            frameSprite.left = 1008.f;
+                            frameSprite.top = 2194.f;
+                            frameSprite.width = 183.f;
+                            frameSprite.height = 218.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 4)
+                        {
+                            frameSprite.left = 548.f;
+                            frameSprite.top = 2194.f;
+                            frameSprite.width = 311.f;
+                            frameSprite.height = 218.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 5)
+                        {
+                            frameSprite.left = 557.f;
+                            frameSprite.top = 1651.f;
+                            frameSprite.width = 222.f;
+                            frameSprite.height = 270.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 6)
+                        {
+                            frameSprite.left = 615.f;
+                            frameSprite.top = 1354.f;
+                            frameSprite.width = 301.f;
+                            frameSprite.height = 289.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 7)
+                        {
+                            frameSprite.left = 185.f;
+                            frameSprite.top = 2426.f;
+                            frameSprite.width = 161.f;
+                            frameSprite.height = 176.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 8)
+                        {
+                            frameSprite.left = 1519.f;
+                            frameSprite.top = 2476.f;
+                            frameSprite.width = 121.f;
+                            frameSprite.height = 126.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
+                        if (enemyIdentity == 9)
+                        {
+                            frameSprite.left = 1142.f;
+                            frameSprite.top = 2467.f;
+                            frameSprite.width = 137.f;
+                            frameSprite.height = 135.f;
+                            enemy.setTextureRect(frameSprite);
+                        }
                         if (enemyIdentity == 10)
                         {
                             frameSprite.left = 1323.f;
@@ -321,8 +421,8 @@ int main()
                                         {
                                             if (!spellBar[sortIndex].isVisible) continue;
                                             enemyHp = enemyHp - (spellBar[sortIndex].dmg - currentEnemy[enemyIdentity].resistance);
-
-                                            std::cout << vie << "ult" << std::endl;
+                                            vie = vie + spellBar[sortIndex].heal;
+                                            std::cout << vie << "vie" << std::endl;
                                             mana = mana - spellBar[sortIndex].costMana;
                                             std::cout << mana << std::endl;
                                             std::cout << enemyHp << "hp" << std::endl;
@@ -360,7 +460,7 @@ int main()
                             if (enemyCount < 19)
                             {
                                 srand(time(NULL));
-                                nb_alea = std::rand() % 3;
+                                nb_alea = std::rand() % 9;
                                 enemyIdentity = nb_alea;
                                 enemyHp = currentEnemy[enemyIdentity].hp;
                                 enemyCount = enemyCount + 1;
@@ -378,6 +478,7 @@ int main()
                         window.draw(sl1);
                         window.draw(enemy);                     
                         window.draw(passer);
+                        window.draw(manaText);
                         for (int sortIndex = 0; sortIndex < NB_SPELLS_BAR; ++sortIndex)
                         {
                             if (!spellBar[sortIndex].isVisible) continue;
